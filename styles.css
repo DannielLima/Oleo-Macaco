@@ -35,6 +35,36 @@ h1 {
   }
 }
 
+@keyframes melt {
+  0% {
+    transform: scaleY(1);
+  }
+  100% {
+    transform: scaleY(1.1) translateY(20px);
+    filter: blur(5px);
+    opacity: 0.8;
+  }
+}
+.animate-melt {
+  animation: melt 5s infinite alternate;
+  transform-origin: top;
+}
+
+.gota-oleo {
+  background: radial-gradient(
+    circle at 30% 30%,
+    #fef3c7 0%,
+    #fbbf24 40%,
+    #b45309 100%
+  );
+  border-radius: 50% 50% 40% 40%;
+  box-shadow:
+    inset -2px -2px 4px rgba(0, 0, 0, 0.3),
+    0 4px 8px rgba(251, 191, 36, 0.2);
+  filter: blur(0.5px);
+  will-change: transform;
+}
+
 .animate-fade-in {
   animation: fade-in 2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
 }

@@ -107,5 +107,14 @@
         ></div>
       </div>
     </main>
+    <svg xmlns="http://www.w3.org/2000/svg" version="1.1" style="display:none;">
+  <defs>
+    <filter id="metaball">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+      <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="metaball" />
+      <feComposite in="SourceGraphic" in2="metaball" operator="atop" />
+    </filter>
+  </defs>
+</svg>
   </body>
 </html>

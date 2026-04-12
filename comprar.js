@@ -17,6 +17,99 @@ document.addEventListener("mousemove", (e) => {
   }
 });
 
+document.addEventListener("mousemove", (e) => {
+  const gota = document.createElement("div");
+
+  gota.className = "fixed pointer-events-none z-[80] gota-oleo";
+
+  const tamanho = Math.random() * 12 + 4;
+  gota.style.width = `${tamanho}px`;
+  gota.style.height = `${tamanho + Math.random() * 5}px`;
+
+  gota.style.left = `${e.clientX}px`;
+  gota.style.top = `${e.clientY}px`;
+
+  document.body.appendChild(gota);
+
+  const driftX = (Math.random() - 0.5) * 30;
+  const quedaY = Math.random() * 100 + 50;
+
+  const anima = gota.animate(
+    [
+      {
+        transform: "translate(0, 0) scale(1)",
+        opacity: 0.8,
+      },
+      {
+        transform: `translate(${driftX}px, ${quedaY}px) scale(0)`,
+        opacity: 0,
+      },
+    ],
+    {
+      duration: Math.random() * 1000 + 1000,
+      easing: "cubic-bezier(0.5, 0, 0.7, 0.5)",
+    },
+  );
+
+  anima.onfinish = () => gota.remove();
+});
+
+const konamiCode = [
+  "ArrowUp",
+  "ArrowUp",
+  "ArrowDown",
+  "ArrowDown",
+  "ArrowLeft",
+  "ArrowRight",
+  "ArrowLeft",
+  "ArrowRight",
+  "b",
+  "a",
+];
+let konamiIndex = 0;
+
+document.addEventListener("keydown", (e) => {
+  if (e.key === konamiCode[konamiIndex]) {
+    konamiIndex++;
+    if (konamiIndex === konamiCode.length) {
+      ativarDerretimento();
+      konamiIndex = 0;
+    }
+  } else {
+    konamiIndex = 0;
+  }
+});
+
+function ativarDerretimento() {
+  document.body.style.transition = "filter 2s ease-in-out";
+  document.body.style.filter = "url(#metaball) blur(2px) contrast(1.2)";
+
+  document.querySelector("main").classList.add("animate-melt");
+
+  setTimeout(() => {
+    document.body.style.filter = "none";
+    document.querySelector("main").classList.remove("animate-melt");
+  }, 5000);
+}
+
+document.addEventListener(
+  "wheel",
+  (e) => {
+    const delta = e.deltaY;
+    const title = document.querySelector("h1");
+    const badge = document.querySelector(".animate-fade-in");
+
+    if (title) title.style.transform = `translateY(${delta * 0.2}px)`;
+    if (badge) badge.style.transform = `translateY(${delta * -0.5}px)`;
+
+    setTimeout(() => {
+      if (title) title.style.transform = "translateY(0)";
+      if (badge) badge.style.transform = "translateY(0)";
+    }, 500);
+  },
+  { passive: true },
+);
+
 function comprar() {
   const btn = document.getElementById("comprar");
   const barra = document.getElementById("barra-progresso");
