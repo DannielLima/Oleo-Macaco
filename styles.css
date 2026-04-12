@@ -1,41 +1,116 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  cursor: none;
+}
+
 body {
+  background-color: #050505;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#cursor {
+  pointer-events: none !important;
+  backdrop-filter: invert(1);
+  z-index: 9999;
+  transition: opacity 0.3s ease;
+}
+
+h1 {
   font-family: "Poppins", sans-serif;
+  letter-spacing: -0.05em;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 2s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}
+
+.backdrop-blur-md {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
 }
 
 .ritual-secreto {
-  background-color: #b50000 !important;
-  animation: tremor 0.1s infinite;
+  animation: shake 0.1s infinite;
+  background: #2a0000 !important;
 }
 
-@keyframes tremor {
+.ritual-secreto main {
+  filter: saturate(2) contrast(1.5);
+}
+
+@keyframes shake {
   0% {
-    transform: translate(0, 0);
+    transform: translate(1px, 1px) rotate(0deg);
   }
-  25% {
-    transform: translate(-2px, 2px);
+  20% {
+    transform: translate(-1px, -1px) rotate(1deg);
   }
-  50% {
-    transform: translate(2px, -2px);
+  40% {
+    transform: translate(1px, -1px) rotate(-1deg);
   }
-  75% {
-    transform: translate(-2px, 2px);
+  60% {
+    transform: translate(-1px, 1px) rotate(0deg);
   }
   100% {
-    transform: translate(2px, -2px);
+    transform: translate(1px, 1px) rotate(0deg);
   }
 }
 
 .flash {
-  background-color: #fff5e0 !important;
+  filter: brightness(5) invert(1);
+  background-color: #fff !important;
 }
 
-.raio {
+@media (max-width: 1024px) {
+  * {
+    cursor: auto !important;
+  }
+  #cursor {
+    display: none !important;
+  }
+}
+
+@media (max-width: 768px) {
+  body {
+    overflow-y: auto;
+  }
+
+  #img-macaco {
+    transform: none !important;
+    transition: transform 0.3s ease;
+  }
+
+  #comprar {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+
+body::after {
+  content: "";
   position: fixed;
-  top: 50%;
-  left: 50%;
-  width: 120vw;
-  height: 120vh;
-  background: url("/images/raio.gif") center/cover no-repeat;
-  z-index: 1000;
-  opacity: 0.8;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.05) 50%);
+  background-size: 100% 4px;
+  z-index: 80;
+  pointer-events: none;
+  opacity: 0.5;
 }

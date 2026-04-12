@@ -1,70 +1,111 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
     <title>Óleo de Macaco</title>
+
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="comprar.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
+
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;700;900&display=swap"
       rel="stylesheet"
     />
+
     <link rel="stylesheet" href="styles.css" />
+    <script src="comprar.js" defer></script>
   </head>
+
   <body
-    class="bg-gradient-to-br from-yellow-100 to-yellow-50 flex flex-col items-center justify-center min-h-screen text-center p-2"
+    class="bg-[#050505] text-white overflow-hidden font-['Poppins'] select-none"
   >
-    <div class="max-w-2xl w-full">
-      <img
-        src="/images/oleo.png"
-        alt="oleo-macaco"
-        class="w-3/4 max-w-xs mx-auto transform"
-      />
-      <h1
-        class="text-2xl md:text-3xl font-bold text-gray-800 mb-2 mt-2 leading-tight"
-      >
-        Óleo de M<a
-          href="https://github.com/DannielLima/oleo-macaco"
-          target="_blank"
-          rel="noopener noreferrer"
-          ><span>a</span></a
-        >caco
-      </h1>
-      <p
-        class="text-sm md:text-base text-gray-700 max-w-2xl mx-auto leading-relaxed"
-      >
-        Descubra o poder ancestral do Óleo de Macaco! Perfeito para
-        <span class="font-bold text-yellow-600">hidratar</span> a pele, dar
-        <span class="font-bold text-yellow-600">brilho</span> e
-        <span class="font-bold text-yellow-600">rejuvenescimento</span>
-        instantâneo. Um segredo milenar agora disponível para você!
-      </p>
-      <p class="text-red-500 font-bold mt-2 text-xs md:text-sm">
-        🔥 ÚLTIMAS UNIDADES DISPONÍVEIS! 🔥
-      </p>
-      <button
-        id="comprar"
-        onclick="comprar()"
-        class="mt-4 px-4 py-2 bg-gradient-to-r from-green-500 to-green-600 text-white text-sm md:text-base font-semibold rounded-lg shadow-md hover:from-green-600 hover:to-green-700 transition-all transform hover:scale-105"
-      >
-        Comprar Agora
-      </button>
+    <div
+      class="fixed inset-0 opacity-[0.03] pointer-events-none z-[60] bg-[url('https://upload.wikimedia.org/wikipedia/commons/7/76/1k_Grain_Noise.jpg')]"
+    ></div>
+
+    <div
+      id="cursor"
+      class="fixed w-10 h-10 border border-white/20 rounded-full pointer-events-none z-[100] transition-transform duration-75 ease-out flex items-center justify-center text-[8px] text-white font-bold opacity-0"
+    >
+      <span class="animate-pulse">●</span>
+    </div>
+
+    <div
+      class="absolute top-[-10%] left-[-10%] w-[60%] h-[40%] bg-yellow-900/10 blur-[120px] rounded-full animate-pulse"
+    ></div>
+    <div
+      class="absolute bottom-[-10%] right-[-10%] w-[50%] h-[40%] bg-amber-900/5 blur-[120px] rounded-full animate-pulse"
+      style="animation-delay: 3s"
+    ></div>
+
+    <main
+      class="relative z-10 flex flex-col items-center justify-center min-h-screen w-full p-4 md:p-8 text-center overflow-y-auto overflow-x-hidden"
+    >
       <div
-        class="w-full max-w-xs bg-gray-200 h-2 mt-4 rounded-full overflow-hidden mx-auto hidden"
+        class="mb-8 md:mb-12 px-4 py-1.5 border border-white/5 bg-white/5 backdrop-blur-md rounded-full text-[8px] md:text-[9px] tracking-[0.4em] md:tracking-[0.5em] uppercase text-zinc-500 animate-fade-in"
+      >
+        Non-Human Grade Formula
+      </div>
+
+      <div class="relative group" id="product-container">
+        <div
+          class="absolute inset-0 bg-yellow-600/10 group-hover:bg-yellow-600/20 transition-all duration-1000 rounded-full blur-[80px] md:blur-[100px]"
+        ></div>
+        <img
+          src="/images/oleo.png"
+          alt="Óleo de Macaco"
+          id="img-macaco"
+          class="w-40 md:w-80 max-w-[65vw] relative z-20 transition-transform duration-700 ease-out drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)]"
+        />
+      </div>
+
+      <div class="mt-8 md:mt-10 space-y-3 md:space-y-4">
+        <h1
+          class="text-4xl sm:text-6xl md:text-9xl font-black tracking-tighter uppercase leading-[0.9] md:leading-[0.85] mix-blend-difference"
+        >
+          Óleo de<br />
+          <span
+            class="text-transparent"
+            style="-webkit-text-stroke: 1px white; opacity: 0.8"
+            >Macaco</span
+          >
+        </h1>
+        <p
+          class="text-zinc-500 text-[9px] md:text-xs tracking-[0.2em] md:tracking-[0.4em] font-light max-w-[280px] md:max-w-sm mx-auto pt-4 md:pt-6 uppercase leading-relaxed"
+        >
+          A destilação da consciência primata. <br class="hidden md:block" />
+          <span class="text-yellow-600/80"
+            >Molecular. Ancestral. Experimental.</span
+          >
+        </p>
+      </div>
+
+      <div class="mt-12 md:mt-16 relative w-full flex justify-center">
+        <button
+          id="comprar"
+          onclick="comprar()"
+          class="relative z-[70] cursor-pointer w-full max-w-[260px] md:max-w-none md:w-auto px-10 md:px-16 py-5 md:py-6 bg-white text-black font-black uppercase text-[9px] md:text-[10px] tracking-[0.3em] md:tracking-[0.4em] hover:bg-yellow-500 transition-all duration-500 hover:tracking-[0.5em] active:scale-95"
+        >
+          Iniciar Extração
+        </button>
+        <div
+          class="hidden md:block absolute inset-0 bg-yellow-500 blur-2xl opacity-0 group-hover:opacity-30 transition-opacity pointer-events-none"
+        ></div>
+      </div>
+
+      <div
         id="barra-container"
+        class="mt-10 md:mt-12 w-48 md:w-64 h-[1px] md:h-[2px] bg-white/5 relative overflow-hidden hidden"
       >
         <div
           id="barra-progresso"
-          class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-500 hidden"
-          style="width: 0%"
+          class="absolute h-full bg-yellow-500 w-0 transition-all duration-300"
         ></div>
       </div>
-      <p
-        id="mensagem-processo"
-        class="text-gray-800 mt-2 text-sm md:text-base font-bold italic hidden"
-      ></p>
-    </div>
+    </main>
   </body>
 </html>

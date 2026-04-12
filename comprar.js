@@ -1,134 +1,137 @@
 let tentativas = 0;
+const cursor = document.getElementById("cursor");
+const img = document.getElementById("img-macaco");
+
+document.addEventListener("mousemove", (e) => {
+  if (window.matchMedia("(pointer: fine)").matches) {
+    if (cursor) {
+      cursor.style.transform = `translate(${e.clientX - 20}px, ${e.clientY - 20}px)`;
+      cursor.style.opacity = "1";
+    }
+
+    if (img) {
+      const xAxis = (window.innerWidth / 2 - e.clientX) / 25;
+      const yAxis = (window.innerHeight / 2 - e.clientY) / 25;
+      img.style.transform = `rotateY(${xAxis}deg) rotateX(${yAxis}deg)`;
+    }
+  }
+});
 
 function comprar() {
-  tentativas++;
-  const botao = document.getElementById("comprar");
+  const btn = document.getElementById("comprar");
   const barra = document.getElementById("barra-progresso");
-  const mensagem = document.getElementById("mensagem-processo");
+  const barraCont = document.getElementById("barra-container");
 
   if (tentativas >= 2) {
     modoBossFight();
     return;
   }
 
-  botao.innerText = "Processando...";
-  botao.disabled = true;
-  barra.classList.remove("hidden");
-  mensagem.classList.remove("hidden");
+  tentativas++;
 
-  let progresso = 0;
-  const intervalo = setInterval(() => {
-    progresso += Math.random() * 10;
-    if (progresso > 90) progresso = 90;
-    barra.style.width = `${progresso}%`;
-  }, 400);
+  if (navigator.vibrate) navigator.vibrate([10, 30, 10]);
+
+  btn.innerText = "SINTETIZANDO...";
+  btn.classList.add("opacity-50", "pointer-events-none");
+  barraCont.classList.remove("hidden");
+
+  let p = 0;
+  const interval = setInterval(() => {
+    p += Math.random() * 10;
+    if (p > 98) p = 98;
+    barra.style.width = p + "%";
+
+    if (p > 70 && Math.random() > 0.8) {
+      document.body.style.filter = "invert(0.1)";
+      setTimeout(() => (document.body.style.filter = "none"), 50);
+    }
+  }, 100);
 
   setTimeout(() => {
-    clearInterval(intervalo);
+    clearInterval(interval);
+
     Swal.fire({
-      icon: "error",
-      title: "Oops",
-      text: "Falha ao processar a compra. Seu navegador não é compatível com macacos.",
-      confirmButtonText: "OK",
-      confirmButtonColor: "#3085d6",
+      title: '<span class="tracking-widest">FALHA NA EXTRAÇÃO</span>',
+      text: "Seu sistema biológico não atingiu a frequência necessária.",
+      background: "#050505",
+      color: "#fff",
+      confirmButtonText: "RE-TENTAR",
+      confirmButtonColor: "#fff",
+      customClass: {
+        confirmButton: "text-black font-bold px-8 py-2",
+      },
     }).then(() => {
-      barra.classList.add("hidden");
-      mensagem.classList.add("hidden");
-      botao.innerText = "Comprar Agora";
-      botao.disabled = false;
+      btn.innerText = "INICIAR EXTRAÇÃO";
+      btn.classList.remove("opacity-50", "pointer-events-none");
+      barra.style.width = "0%";
+      barraCont.classList.add("hidden");
     });
-  }, 2000);
+  }, 1500);
 }
 
 function modoBossFight() {
   let clicks = 0;
-  let tempoRestante = 10;
+  let tempo = 10.0;
 
-  const container = document.body;
-  const boss = document.createElement("div");
-  boss.id = "boss";
-  boss.innerHTML = `
-    <div class='fixed inset-0 bg-black bg-opacity-80 flex flex-col items-center justify-center text-white z-50'>
-      <img src='/images/macaco-boss.gif'/>
-      <h1 class='text-3xl font-bold mt-4'>Modo Macaco! 🦍</h1>
-      <p class='text-lg'>Clique rápido para derrotar o macaco!</p>
-      <p id='contador-cliques' class='text-xl font-bold'>Cliques: 0</p>
-      <p id='tempo-restante' class='text-lg'>Tempo restante: 10s</p>
-      <button id='botao-lutar' class='mt-4 px-4 py-2 bg-red-500 text-white text-lg font-semibold rounded-lg'>Atacar!</button>
-    </div>
-  `;
-  container.appendChild(boss);
+  const bossOverlay = document.createElement("div");
+  bossOverlay.className =
+    "fixed inset-0 bg-black z-[200] flex flex-col items-center justify-center p-6 text-white text-center";
 
-  const botaoLutar = document.getElementById("botao-lutar");
-  botaoLutar.addEventListener("click", () => {
-    clicks++;
-    document.getElementById(
-      "contador-cliques"
-    ).innerText = `Cliques: ${clicks}`;
-  });
+  bossOverlay.innerHTML = `
+        <div class="mb-6 animate-pulse">
+            <img src="images/macaco-boss.gif" alt="Macaco Boss" class="w-40 h-40 md:w-56 md:h-56 object-contain drop-shadow-[0_0_20px_rgba(255,0,0,0.5)]" />
+        </div>
+        <h2 class="text-4xl font-black italic mb-2 text-red-600">MODO PRIMATA</h2>
+        <p class="text-zinc-500 tracking-[.3em] text-[10px] mb-6 uppercase animate-pulse">Sobrecarga de DNA detectada</p>
+        <div class="text-6xl font-mono mb-8" id="boss-timer">10.00</div>
+        <button id="atacar" class="w-full max-w-xs aspect-square rounded-full border-4 border-white/20 bg-white/5 text-white font-black text-2xl uppercase active:scale-95 transition-all shadow-[0_0_30px_rgba(255,255,255,0.1)]">GOLPEAR</button>
+        <p class="mt-8 text-[10px] opacity-50 uppercase tracking-[0.4em]">Sincronia: <span id="click-count">0</span> / 25</p>
+    `;
+  document.body.appendChild(bossOverlay);
 
-  const timer = setInterval(() => {
-    tempoRestante--;
-    document.getElementById(
-      "tempo-restante"
-    ).innerText = `Tempo restante: ${tempoRestante}s`;
-    if (tempoRestante <= 0) {
-      clearInterval(timer);
-      finalizarBossFight(clicks);
+  const timerDisplay = document.getElementById("boss-timer");
+  const clickDisplay = document.getElementById("click-count");
+  const btnAtacar = document.getElementById("atacar");
+
+  const countdown = setInterval(() => {
+    tempo -= 0.01;
+    timerDisplay.innerText = tempo.toFixed(2);
+    if (tempo <= 0) {
+      clearInterval(countdown);
+      finalizarBoss(clicks >= 25, bossOverlay);
     }
-  }, 1000);
+  }, 10);
+
+  btnAtacar.addEventListener("click", () => {
+    clicks++;
+    clickDisplay.innerText = clicks;
+    if (navigator.vibrate) navigator.vibrate(20);
+    bossOverlay.style.filter = `hue-rotate(${clicks * 15}deg) brightness(${1 + clicks * 0.02})`;
+    setTimeout(() => {
+      bossOverlay.style.filter = `hue-rotate(${clicks * 15}deg)`;
+    }, 50);
+  });
 }
 
-function finalizarBossFight(clicks) {
-  document.getElementById("boss").remove();
-  if (clicks >= 15) {
+function finalizarBoss(vitoria, overlay) {
+  overlay.remove();
+  if (vitoria) {
     Swal.fire({
       icon: "success",
-      title: "Você derrotou o macaco! 🏆",
-      text: "Agora pode comprar o Óleo de Macaco.",
-      confirmButtonText: "OK",
+      title: "SÍNTESE CONCLUÍDA",
+      text: "O Óleo de Macaco agora corre em suas veias.",
+      background: "#000",
+      color: "#fff",
     });
     tentativas = 0;
   } else {
     Swal.fire({
       icon: "error",
-      title: "O macaco te derrotou! 💀",
-      text: "Tente novamente.",
-      confirmButtonText: "OK",
+      title: "EVOLUÇÃO INTERROMPIDA",
+      text: "Você não sobreviveu ao processo.",
+      background: "#000",
+      color: "#fff",
     });
+    tentativas = 1;
   }
-}
-
-document.addEventListener("DOMContentLoaded", () => {
-  let inputBuffer = "";
-  const secretCode = "podermacaco";
-
-  document.addEventListener("keydown", (event) => {
-    inputBuffer += event.key.toLowerCase();
-    if (inputBuffer.length > secretCode.length) {
-      inputBuffer = inputBuffer.slice(-secretCode.length);
-    }
-
-    if (inputBuffer === secretCode) {
-      ativarModoRitualSecreto();
-    }
-  });
-});
-
-function ativarModoRitualSecreto() {
-  document.body.classList.remove(
-    "bg-gradient-to-br",
-    "from-yellow-100",
-    "to-yellow-50"
-  );
-  document.body.classList.add("ritual-secreto");
-
-  setInterval(() => {
-    document.body.classList.toggle("flash");
-  }, 200);
-
-  const raio = document.createElement("div");
-  raio.classList.add("raio");
-  document.body.appendChild(raio);
-  setTimeout(() => raio.remove(), 2000);
 }
